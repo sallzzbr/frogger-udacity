@@ -9,7 +9,7 @@
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
  *
- * This engine makes the canvas' context (ctx) object globally available to make 
+ * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
 
@@ -22,6 +22,9 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        gameState = "selection",
+        playerSprite = '',
+        playerLife = 3,
         lastTime;
 
     canvas.width = 505;
@@ -78,10 +81,29 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+      if(gameState == "running"){
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+      } else {
+        selector.update();
+      }
     }
 
+    function checkCollisions() {
+      allEnemies.forEach(function (enemy) {
+          if ((enemy.y === player.y) && (player.x >= (enemy.x - 50)) && (player.x <= (enemy.x + 80))) {
+              this.reset();
+              playerLife -= 1;
+              if (playerLife == 0){
+                console.log("teste");
+                gameState = "selection";
+                playerLife = 3;
+              }
+          } else if(player.y < 25){
+              this.reset();
+          }
+      });
+    }
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
@@ -117,7 +139,7 @@ var Engine = (function(global) {
             numRows = 6,
             numCols = 5,
             row, col;
-        
+
         // Before drawing, clear existing canvas
         ctx.clearRect(0,0,canvas.width,canvas.height)
 
@@ -138,7 +160,25 @@ var Engine = (function(global) {
             }
         }
 
+        // Score
+        ctx.fillStyle = "rgb(250, 250, 250)";
+        ctx.font = "24px Helvetica";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText("Score: " + player.points, 335, 64);
+
+        if (gameState == "selection") {
+            renderPlayerSelect();
+        } else {
         renderEntities();
+        playerHP();
+      }
+    }
+
+    function playerHP(){
+      for(i = 0; i < playerLife; i++){
+        ctx.drawImage(Resources.get('images/Heart.png'), i * 45, 30, 50, 86);
+      }
     }
 
     /* This function is called by the render function and is called on each game
@@ -156,25 +196,86 @@ var Engine = (function(global) {
         player.render();
     }
 
+    function renderPlayerSelect() {
+        var options = [
+            [0, 'images/char-cat-girl.png'],
+            [101, 'images/char-horn-girl.png'],
+            [202, 'images/char-pink-girl.png'],
+            [303, 'images/char-boy.png'],
+            [404, 'images/char-princess-girl.png']
+        ];
+
+        selector.render();
+
+        for (i = 0; i < options.length; i++) {
+            ctx.drawImage(Resources.get(options[i][1]), options[i][0], 303);
+
+            if (options[i][0] === selector.x) {
+                playerSprite = options[i][1];
+            }
+        }
+
+        ctx.font="36px Impact";
+        // Create gradient
+        var gradient=ctx.createLinearGradient(0,0,canvas.width,0);
+        gradient.addColorStop("0","magenta");
+        gradient.addColorStop("0.5","blue");
+        gradient.addColorStop("1.0","red");
+        // Fill with gradient
+        ctx.fillStyle = "rgb(250, 250, 250)";
+        ctx.fillText("Choose your characther", 80, 480);
+        ctx.strokeStyle=gradient;
+        ctx.lineWidth = 2;
+        ctx.strokeText("Choose your characther", 80, 480);
+
+    }
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
-    function reset() {
-        // noop
-    }
+     function reset() {
+         allEnemies = [];
+         for (i = 0; i < 3; i++) {
+             allEnemies[i] = new Enemy();
+         }
+         player = new Player(playerSprite);
+     }
+
+    document.addEventListener('keyup', function(e) {
+        if (gameState == "selection"  && (e.keyCode < 37 || e.keyCode > 40)) {
+            reset();
+            gameState = "running";
+        } else if (gameState == "gameover") {
+            if (e.keyCode == 13) {
+                reset();
+                gameState = "running";
+            }
+            if (e.keyCode == 32) {
+                gameState = "selection";
+            }
+        }
+    });
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
      */
-    Resources.load([
-        'images/stone-block.png',
-        'images/water-block.png',
-        'images/grass-block.png',
-        'images/enemy-bug.png',
-        'images/char-boy.png'
-    ]);
+     Resources.load([
+         'images/stone-block.png',
+         'images/water-block.png',
+         'images/grass-block.png',
+         'images/enemy-bug.png',
+         'images/char-boy.png',
+         'images/char-cat-girl.png',
+         'images/char-horn-girl.png',
+         'images/char-pink-girl.png',
+         'images/char-princess-girl.png',
+         'images/Gem Blue.png',
+         'images/Gem Green.png',
+         'images/Gem Orange.png',
+         'images/Star.png',
+         'images/Heart.png'
+     ]);
     Resources.onReady(init);
 
     /* Assign the canvas' context object to the global variable (the window

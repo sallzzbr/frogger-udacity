@@ -25,10 +25,10 @@ Enemy.prototype.update = function(dt) {
     this.x = randomStart();
     this.y = randomRow();
   }
-  if (player.x >= this.x - 70  && player.x <= this.x + 70
-    && player.y >= this.y - 70 && player.y <= this.y + 70) {
-  this.reset();
-}
+  // if (player.x >= this.x - 70  && player.x <= this.x + 70
+  //   && player.y >= this.y - 70 && player.y <= this.y + 70) {
+  // this.reset();
+  // }
 
 
 };
@@ -41,10 +41,11 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function() {
-  this.sprite = 'images/char-boy.png';
+var Player = function (URL) {
+  this.sprite = URL || '';
   this.x = 202.5;
   this.y = 380;
+  this.points = 0;
 }
 
 //Update player position
@@ -65,9 +66,9 @@ Player.prototype.update = function(){
     this.ctlKey = null;
 
     //If on water, reset
-    if(this.y < 25){
-        this.reset();
-    }
+    // if(this.y < 25){
+    //     this.reset();
+    // }
 }
 
 Player.prototype.render = function() {
@@ -128,4 +129,46 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
+    selector.handleInput(allowedKeys[e.keyCode]);
 });
+
+var Selector = function () {
+    this.sprite = 'images/Star.png';
+
+    this.x = 0;
+    this.y = 202;
+}
+
+Selector.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
+
+Selector.prototype.update = function() {
+    if (this.x <= 0) {
+        this.x = 0;
+    }
+    if (this.x >= 404) {
+        this.x = 404;
+    }
+    if (this.y >= 404) {
+        this.y = 404;
+    };
+}
+
+Selector.prototype.handleInput = function(key) {
+    var direction = {
+        'left': [-101, 0],
+        'up': [0, -85.5],
+        'right': [101, 0],
+        'down': [0, 85.5],
+        'enter': [0,0]
+    };
+
+    this.x += direction[key][0];
+}
+
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+// Place the player object in a variable called player
+
+var selector = new Selector();
