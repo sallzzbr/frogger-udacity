@@ -264,51 +264,38 @@ var Engine = (function(global) {
           ctx.font="98px Impact";
           ctx.fillStyle = "rgb(77, 0, 0)";
           ctx.fillText("YOU DIED", 90, 220);
-          ctx.fillStyle = "rgb(250, 250, 250)";
-          ctx.font = "32px Helvetica";
-          ctx.fillText("Frogger Souls", 170, 330);
-          ctx.fillText("Press SPACE to restart", 95, 370);
+          gameOverText("Frogger Souls", 170, 330, "Press SPACE to restart", 95, 370, false)
         } else if ( player.points > 0 && player.points < 50) {
-            ctx.font="98px Impact";
-            var gradient=ctx.createLinearGradient(0,0,canvas.width,0);
-            gradient.addColorStop("0","magenta");
-            gradient.addColorStop("0.5","blue");
-            gradient.addColorStop("1.0","red");
-            // Fill with gradient
-            ctx.fillStyle = "rgb(250, 250, 250)";
-            ctx.fillText("GG", 201.5, 190);
-            // Create gradient
-
-            ctx.strokeStyle=gradient;
-            ctx.lineWidth = 2;
-            ctx.strokeText("GG", 201.5, 190);
-            ctx.fillStyle = "rgb(250, 250, 250)";
-            ctx.font = "32px Helvetica";
-            ctx.fillText("GIT GUD", 190, 300);
-            ctx.fillText("Press SPACE to restart", 95, 340);
-            ctx.strokeText("GIT GUD", 190, 300);
-            ctx.strokeText("Press SPACE to restart", 95, 340);
+            gameOverMessage("GG", 201.5, 190, 98);
+            gameOverText("GIT GUD", 190, 300, "Press SPACE to restart", 95, 340, true)
         } else {
-            ctx.font="62px Impact";
-            var gradient=ctx.createLinearGradient(0,0,canvas.width,0);
-            gradient.addColorStop("0","magenta");
-            gradient.addColorStop("0.5","blue");
-            gradient.addColorStop("1.0","red");
-            // Fill with gradient
-            ctx.fillStyle = "rgb(250, 250, 250)";
-            ctx.fillText("CONGRATULATIONS", 15, 220);
-            // Create gradient
-
-            ctx.strokeStyle=gradient;
-            ctx.lineWidth = 2;
-            ctx.strokeText("CONGRATULATIONS", 15, 220);
-            ctx.fillStyle = "rgb(250, 250, 250)";
-            ctx.font = "32px Helvetica";
-            ctx.fillText("You are awesome!", 125, 300);
-            ctx.fillText("Press SPACE to restart", 95, 340);
-            ctx.strokeText("You are awesome!", 125, 300);
-            ctx.strokeText("Press SPACE to restart", 95, 340);
+            gameOverMessage("CONGRATULATIONS", 15, 220, 62)
+            gameOverText("You are awesome!", 125, 300, "Press SPACE to restart", 95, 340, true)
         }
+    }
+
+    function gameOverMessage(message, x, y, fontSize){
+      ctx.font= fontSize + "px Impact";
+      var gradient=ctx.createLinearGradient(0,0,canvas.width,0);
+      gradient.addColorStop("0","magenta");
+      gradient.addColorStop("0.5","blue");
+      gradient.addColorStop("1.0","red");
+      ctx.fillStyle = "rgb(250, 250, 250)";
+      ctx.fillText(message, x, y);
+      ctx.strokeStyle=gradient;
+      ctx.lineWidth = 2;
+      ctx.strokeText(message, x, y);
+    }
+
+    function gameOverText(topText, topX, topY, bottomText, botX, botY, stroke){
+      ctx.fillStyle = "rgb(250, 250, 250)";
+      ctx.font = "32px Helvetica";
+      ctx.fillText(topText, topX, topY);
+      ctx.fillText(bottomText, botX, botY);
+      if (stroke == true){
+        ctx.strokeText(topText, topX, topY);
+        ctx.strokeText(bottomText, botX, botY);
+      }
     }
 
     document.addEventListener('keyup', function(e) {
