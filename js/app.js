@@ -104,6 +104,12 @@ function randomRow(){
   return row[random_row];
 }
 
+function randomX(){
+  var random_row = Math.floor(getRandomIntInclusive(0, 4));
+  var row = [55, 165, 275, 385, 495];
+  return row[random_row];
+}
+
 function randomStart(){
   var random_start = Math.floor(getRandomIntInclusive(0, 2));
   var start = [-25, -100, -210];
@@ -172,3 +178,22 @@ Selector.prototype.handleInput = function(key) {
 // Place the player object in a variable called player
 
 var selector = new Selector();
+
+var Gems = function () {
+    var sprites = [
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
+    ];
+
+    this.value = Math.floor(Math.random() * 3)
+    this.sprite = sprites[this.value];
+    this.multiplier = 5 * (this.value + 1);
+
+    this.x = randomX();
+    this.y = randomRow();
+}
+
+Gems.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};

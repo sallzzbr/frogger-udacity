@@ -96,10 +96,11 @@ var Engine = (function(global) {
               playerLife -= 1;
               if (playerLife == 0){
                 console.log("teste");
-                gameState = "selection";
+                gameState = "gameover";
                 playerLife = 3;
               }
           } else if(player.y < 25){
+              player.points += 1;
               this.reset();
           }
       });
@@ -165,10 +166,12 @@ var Engine = (function(global) {
         ctx.font = "24px Helvetica";
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
-        ctx.fillText("Score: " + player.points, 335, 64);
+        ctx.fillText("Score: " + player.points, 360, 64);
 
         if (gameState == "selection") {
             renderPlayerSelect();
+        } else if (gameState == "gameover") {
+            renderGameOver();
         } else {
         renderEntities();
         playerHP();
@@ -194,6 +197,9 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        gems = new Gems();
+        gems.render();
     }
 
     function renderPlayerSelect() {
@@ -241,17 +247,70 @@ var Engine = (function(global) {
          player = new Player(playerSprite);
      }
 
+     function renderGameOver() {
+
+       if(player.points == 0){
+          ctx.rect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "black";
+          ctx.fill();
+          ctx.font="98px Impact";
+          ctx.fillStyle = "rgb(77, 0, 0)";
+          ctx.fillText("YOU DIED", 90, 220);
+          ctx.fillStyle = "rgb(250, 250, 250)";
+          ctx.font = "32px Helvetica";
+          ctx.fillText("Frogger Souls", 170, 330);
+          ctx.fillText("Press SPACE to restart", 95, 370);
+        } else if ( player.points > 0 && player.points < 50) {
+            ctx.font="98px Impact";
+            var gradient=ctx.createLinearGradient(0,0,canvas.width,0);
+            gradient.addColorStop("0","magenta");
+            gradient.addColorStop("0.5","blue");
+            gradient.addColorStop("1.0","red");
+            // Fill with gradient
+            ctx.fillStyle = "rgb(250, 250, 250)";
+            ctx.fillText("GG", 201.5, 190);
+            // Create gradient
+
+            ctx.strokeStyle=gradient;
+            ctx.lineWidth = 2;
+            ctx.strokeText("GG", 201.5, 190);
+            ctx.fillStyle = "rgb(250, 250, 250)";
+            ctx.font = "32px Helvetica";
+            ctx.fillText("GIT GUD", 190, 300);
+            ctx.fillText("Press SPACE to restart", 95, 340);
+            ctx.strokeText("GIT GUD", 190, 300);
+            ctx.strokeText("Press SPACE to restart", 95, 340);
+        } else {
+            ctx.font="62px Impact";
+            var gradient=ctx.createLinearGradient(0,0,canvas.width,0);
+            gradient.addColorStop("0","magenta");
+            gradient.addColorStop("0.5","blue");
+            gradient.addColorStop("1.0","red");
+            // Fill with gradient
+            ctx.fillStyle = "rgb(250, 250, 250)";
+            ctx.fillText("CONGRATULATIONS", 15, 220);
+            // Create gradient
+
+            ctx.strokeStyle=gradient;
+            ctx.lineWidth = 2;
+            ctx.strokeText("CONGRATULATIONS", 15, 220);
+            ctx.fillStyle = "rgb(250, 250, 250)";
+            ctx.font = "32px Helvetica";
+            ctx.fillText("You are awesome!", 125, 300);
+            ctx.fillText("Press SPACE to restart", 95, 340);
+            ctx.strokeText("You are awesome!", 125, 300);
+            ctx.strokeText("Press SPACE to restart", 95, 340);
+        }
+    }
+
     document.addEventListener('keyup', function(e) {
         if (gameState == "selection"  && (e.keyCode < 37 || e.keyCode > 40)) {
             reset();
             gameState = "running";
         } else if (gameState == "gameover") {
-            if (e.keyCode == 13) {
-                reset();
-                gameState = "running";
-            }
             if (e.keyCode == 32) {
                 gameState = "selection";
+                player.points = 0;
             }
         }
     });
