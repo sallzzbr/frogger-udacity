@@ -102,6 +102,10 @@ var Engine = (function(global) {
           } else if(player.y < 25){
               player.points += 1;
               this.reset();
+              gems = new Gems();
+          } else if ((gems.y === player.y) && (player.x >= (gems.x - 50)) && (player.x <= (gems.x + 80))) {
+            player.points += gems.bonus;
+            gems = new Gems();
           }
       });
     }
@@ -192,14 +196,16 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+
+        gems.render();
+
+
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
         player.render();
 
-        gems = new Gems();
-        gems.render();
     }
 
     function renderPlayerSelect() {
@@ -245,6 +251,8 @@ var Engine = (function(global) {
              allEnemies[i] = new Enemy();
          }
          player = new Player(playerSprite);
+
+         gems = new Gems();
      }
 
      function renderGameOver() {

@@ -106,7 +106,7 @@ function randomRow(){
 
 function randomX(){
   var random_row = Math.floor(getRandomIntInclusive(0, 4));
-  var row = [55, 165, 275, 385, 495];
+  var row = [0, 100, 200, 300, 400];
   return row[random_row];
 }
 
@@ -180,20 +180,30 @@ Selector.prototype.handleInput = function(key) {
 var selector = new Selector();
 
 var Gems = function () {
-    var sprites = [
-        'images/Gem Blue.png',
-        'images/Gem Green.png',
-        'images/Gem Orange.png'
+
+    var types = [
+        ['images/Gem Blue.png', 5],
+        ['images/Gem Green.png', 10],
+        ['images/Gem Orange.png', 15]
     ];
 
-    this.value = Math.floor(Math.random() * 3)
-    this.sprite = sprites[this.value];
-    this.multiplier = 5 * (this.value + 1);
-
+    this.value = Math.floor(getRandomIntInclusive(0, 2))
+    this.sprite = types[this.value][0];
+    this.bonus = types[this.value][1];
     this.x = randomX();
     this.y = randomRow();
+
+    console.log(types[this.value][0]);
+    console.log(types[this.value][1]);
 }
+
+function movingGems(){
+  gems = new Gems();
+}
+setInterval(movingGems, 4500);
 
 Gems.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+var gem = new Gems();
