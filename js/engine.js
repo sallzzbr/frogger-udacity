@@ -91,22 +91,22 @@ var Engine = (function(global) {
 
     function checkCollisions() {
       allEnemies.forEach(function (enemy) {
-          if ((enemy.y === player.y) && (player.x >= (enemy.x - 50)) && (player.x <= (enemy.x + 80))) {
-              this.reset();
-              playerLife -= 1;
-              if (playerLife == 0){
-                console.log("teste");
-                gameState = "gameover";
-                playerLife = 3;
-              }
-          } else if(player.y < 25){
-              player.points += 1;
-              this.reset();
-              gems = new Gems();
-          } else if ((gems.y === player.y) && (player.x >= (gems.x - 50)) && (player.x <= (gems.x + 80))) {
-            player.points += gems.bonus;
-            gems = new Gems();
+        if ((enemy.y === player.y) && (player.x >= (enemy.x - 50)) && (player.x <= (enemy.x + 80))) {
+          this.reset();
+          playerLife -= 1;
+          if (playerLife == 0){
+            console.log("teste");
+            gameState = "gameover";
+            playerLife = 3;
           }
+        } else if(player.y < 25){
+          player.points += 1;
+          this.reset();
+          gems = new Gems();
+        } else if ((gems.y === player.y) && (player.x >= (gems.x - 50)) && (player.x <= (gems.x + 80))) {
+          player.points += gems.bonus;
+          gems = new Gems();
+        }
       });
     }
     /* This is called by the update function and loops through all of the
@@ -245,33 +245,33 @@ var Engine = (function(global) {
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
-     function reset() {
-         allEnemies = [];
-         for (i = 0; i < 3; i++) {
-             allEnemies[i] = new Enemy();
-         }
-         player = new Player(playerSprite);
+    function reset() {
+       allEnemies = [];
+       for (i = 0; i < 3; i++) {
+           allEnemies[i] = new Enemy();
+       }
+       player = new Player(playerSprite);
 
-         gems = new Gems();
-     }
+       gems = new Gems();
+    }
 
-     function renderGameOver() {
+   function renderGameOver() {
 
-       if(player.points == 0){
-          ctx.rect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = "black";
-          ctx.fill();
-          ctx.font="98px Impact";
-          ctx.fillStyle = "rgb(77, 0, 0)";
-          ctx.fillText("YOU DIED", 90, 220);
-          gameOverText("Frogger Souls", 170, 330, "Press SPACE to restart", 95, 370, false)
-        } else if ( player.points > 0 && player.points < 50) {
-            gameOverMessage("GG", 201.5, 190, 98);
-            gameOverText("GIT GUD", 190, 300, "Press SPACE to restart", 95, 340, true)
-        } else {
-            gameOverMessage("CONGRATULATIONS", 15, 220, 62)
-            gameOverText("You are awesome!", 125, 300, "Press SPACE to restart", 95, 340, true)
-        }
+     if(player.points == 0){
+        ctx.rect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "black";
+        ctx.fill();
+        ctx.font="98px Impact";
+        ctx.fillStyle = "rgb(77, 0, 0)";
+        ctx.fillText("YOU DIED", 90, 220);
+        gameOverText("Frogger Souls", 170, 330, "Press SPACE to restart", 95, 370, false)
+      } else if ( player.points > 0 && player.points < 500) {
+          gameOverMessage("GG", 201.5, 190, 98);
+          gameOverText("GIT GUD", 190, 300, "Press SPACE to restart", 95, 340, true)
+      } else {
+          gameOverMessage("CONGRATULATIONS", 15, 220, 62)
+          gameOverText("You are awesome!", 125, 300, "Press SPACE to restart", 95, 340, true)
+      }
     }
 
     function gameOverMessage(message, x, y, fontSize){

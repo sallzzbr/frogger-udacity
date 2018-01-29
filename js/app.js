@@ -11,7 +11,7 @@ var Enemy = function(start, row) {
     this.y = row;
 //This will set the speed to a random number that will be minimum 100
     this.speed = Math.floor((Math.random() * 200) + 100);
-};
+}
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -25,18 +25,12 @@ Enemy.prototype.update = function(dt) {
     this.x = randomStart();
     this.y = randomRow();
   }
-  // if (player.x >= this.x - 70  && player.x <= this.x + 70
-  //   && player.y >= this.y - 70 && player.y <= this.y + 70) {
-  // this.reset();
-  // }
-
-
-};
+}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+}
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -51,24 +45,19 @@ var Player = function (URL) {
 //Update player position
 Player.prototype.update = function(){
     //if left key is pressed and player is not on edge of map, pressed decrement x
-    if(this.ctlKey === 'left' && this.x > 2.5){
-        this.x = this.x - 100;
+  if(this.ctlKey === 'left' && this.x > 2.5){
+    this.x = this.x - 100;
     //if right key is pressed and player is not on edge of map increment x
   }else if(this.ctlKey === 'right' && this.x != 402.5){
-        this.x = this.x + 100;
+    this.x = this.x + 100;
     //if up key is pressed increment y
-    }else if(this.ctlKey === 'up'){
-        this.y = this.y - 80;
+  }else if(this.ctlKey === 'up'){
+    this.y = this.y - 80;
     //if down key is pressed and player is not on edge of map decrement y
   }else if (this.ctlKey === 'down' && this.y != 380){
-        this.y = this.y + 80;
-    }
+    this.y = this.y + 80;
+  }
     this.ctlKey = null;
-
-    //If on water, reset
-    // if(this.y < 25){
-    //     this.reset();
-    // }
 }
 
 Player.prototype.render = function() {
@@ -152,12 +141,9 @@ Selector.prototype.render = function() {
 Selector.prototype.update = function() {
     if (this.x <= 0) {
         this.x = 0;
-    }
+    };
     if (this.x >= 404) {
         this.x = 404;
-    }
-    if (this.y >= 404) {
-        this.y = 404;
     };
 }
 
@@ -166,8 +152,7 @@ Selector.prototype.handleInput = function(key) {
         'left': [-101, 0],
         'up': [0, -85.5],
         'right': [101, 0],
-        'down': [0, 85.5],
-        'enter': [0,0]
+        'down': [0, 85.5]
     };
 
     this.x += direction[key][0];
@@ -204,6 +189,6 @@ setInterval(movingGems, 4500);
 
 Gems.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+}
 
 var gem = new Gems();
